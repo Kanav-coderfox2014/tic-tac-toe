@@ -11,6 +11,9 @@
 
 <body>
 
+    <!-- Confetti container -->
+    <div id="confetti-container"></div>
+
     <main class="game-container">
 
         <h1>Tic-Tac-Toe</h1>
@@ -18,6 +21,9 @@
         <p id="status">Player X's turn</p>
 
         <div class="board" id="board">
+
+            <!-- Winning line -->
+            <div id="winning-line"></div>
 
             <button class="cell" data-index="0"></button>
             <button class="cell" data-index="1"></button>
@@ -36,6 +42,28 @@
         <button id="restart-btn">Restart Game</button>
 
     </main>
+
+
+    <!-- Winner popup -->
+
+    <div id="winner-popup" class="popup-overlay">
+
+        <div class="winner-popup">
+
+            <div class="trophy">🏆</div>
+
+            <h2 id="winner-title">Player X Wins!</h2>
+
+            <p>Congratulations!</p>
+
+            <button id="popup-restart-btn">
+                Play Again
+            </button>
+
+        </div>
+
+    </div>
+
 
     <script src="js/script.js"></script>
 

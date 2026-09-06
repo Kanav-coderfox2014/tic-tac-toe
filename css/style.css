@@ -4,6 +4,7 @@
     padding: 0;
 }
 
+
 body {
     min-height: 100vh;
 
@@ -14,23 +15,37 @@ body {
     font-family: Arial, sans-serif;
 
     background: #f4f4f4;
+
+    overflow: hidden;
 }
+
 
 .game-container {
     text-align: center;
 }
+
 
 h1 {
     font-size: 42px;
     margin-bottom: 10px;
 }
 
+
 #status {
     font-size: 20px;
     margin-bottom: 25px;
+
+    transition: 0.3s;
 }
 
+
+/* =========================
+   GAME BOARD
+========================= */
+
 .board {
+    position: relative;
+
     display: grid;
 
     grid-template-columns: repeat(3, 100px);
@@ -40,6 +55,7 @@ h1 {
 
     margin-bottom: 25px;
 }
+
 
 .cell {
     width: 100px;
@@ -57,14 +73,66 @@ h1 {
 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
-    transition: 0.15s;
+    transition:
+        transform 0.15s,
+        background 0.15s;
 }
+
 
 .cell:hover {
     background: #eeeeee;
+
+    transform: scale(1.02);
 }
 
-#restart-btn {
+
+/* =========================
+   WINNING LINE
+========================= */
+
+#winning-line {
+    position: absolute;
+
+    height: 7px;
+
+    background: #ff3b30;
+
+    border-radius: 10px;
+
+    transform-origin: left center;
+
+    z-index: 10;
+
+    pointer-events: none;
+
+    display: none;
+
+    box-shadow: 0 0 10px rgba(255, 59, 48, 0.4);
+
+    animation: strike 0.4s ease-out;
+}
+
+
+@keyframes strike {
+
+    from {
+        transform: scaleX(0);
+    }
+
+    to {
+        transform: scaleX(1);
+    }
+
+}
+
+
+/* =========================
+   RESTART BUTTON
+========================= */
+
+#restart-btn,
+#popup-restart-btn {
+
     padding: 12px 25px;
 
     border: none;
@@ -76,8 +144,173 @@ h1 {
     font-size: 16px;
 
     cursor: pointer;
+
+    transition: 0.2s;
 }
 
-#restart-btn:hover {
+
+#restart-btn:hover,
+#popup-restart-btn:hover {
+
     background: #444;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   WINNER POPUP
+========================= */
+
+.popup-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    backdrop-filter: blur(4px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: 0.3s;
+
+    z-index: 100;
+}
+
+
+.popup-overlay.show {
+
+    opacity: 1;
+    visibility: visible;
+}
+
+
+.winner-popup {
+
+    width: 350px;
+
+    padding: 35px;
+
+    text-align: center;
+
+    background: white;
+
+    border-radius: 20px;
+
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+
+    transform: scale(0.7);
+
+    transition: 0.3s;
+}
+
+
+.popup-overlay.show .winner-popup {
+
+    transform: scale(1);
+
+}
+
+
+.trophy {
+
+    font-size: 65px;
+
+    margin-bottom: 10px;
+
+    animation: trophyBounce 0.8s ease-in-out;
+}
+
+
+@keyframes trophyBounce {
+
+    0% {
+        transform: scale(0.3) rotate(-15deg);
+    }
+
+    50% {
+        transform: scale(1.2) rotate(10deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0);
+    }
+
+}
+
+
+.winner-popup h2 {
+
+    font-size: 32px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.winner-popup p {
+
+    font-size: 18px;
+
+    margin-bottom: 25px;
+
+    color: #555;
+
+}
+
+
+/* =========================
+   CONFETTI
+========================= */
+
+#confetti-container {
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    overflow: hidden;
+
+    z-index: 200;
+}
+
+
+.confetti {
+
+    position: absolute;
+
+    top: -20px;
+
+    width: 10px;
+    height: 18px;
+
+    animation: confettiFall linear forwards;
+}
+
+
+@keyframes confettiFall {
+
+    0% {
+        transform:
+            translateY(0)
+            rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            translateY(110vh)
+            rotate(720deg);
+        opacity: 0;
+    }
+
 }
