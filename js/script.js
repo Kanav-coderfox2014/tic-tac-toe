@@ -26,10 +26,12 @@ let board = [
     "", "", ""
 ];
 
-
 let currentPlayer = "X";
 
 let gameActive = true;
+
+// X = YOU
+// O = COMPUTER
 
 
 const winningCombinations = [
@@ -48,14 +50,18 @@ const winningCombinations = [
 ];
 
 
+// ==========================================
+// PLAYER CLICK
+// ==========================================
+
 cells.forEach((cell) => {
 
-    cell.addEventListener("click", handleCellClick);
+    cell.addEventListener("click", handlePlayerMove);
 
 });
 
 
-function handleCellClick(event) {
+function handlePlayerMove(event) {
 
     const clickedCell = event.target;
 
@@ -63,39 +69,290 @@ function handleCellClick(event) {
         Number(clickedCell.dataset.index);
 
 
-    // Don't allow clicking an occupied cell
-    // or playing after the game has ended
+    // Don't allow moves if:
+    // 1. The cell is already occupied
+    // 2. The game is over
+    // 3. It is currently the computer's turn
 
     if (
         board[clickedIndex] !== "" ||
-        !gameActive
+        !gameActive ||
+        currentPlayer !== "X"
     ) {
         return;
     }
 
 
-    // Put player's symbol on the board
+    // Player makes their move
 
-    board[clickedIndex] = currentPlayer;
-
-    clickedCell.textContent = currentPlayer;
+    makeMove(clickedIndex, "X");
 
 
-    checkResult();
+    // Check if player won
+
+    const result = checkResult();
+
+    if (result) {
+        return;
+    }
+
+
+    // Switch to computer
+
+    currentPlayer = "O";
+
+    statusText.textContent =
+        "Computer is thinking...";
+
+
+    // Small delay so the computer doesn't
+    // instantly appear after your move
+
+    setTimeout(computerMove, 500);
 }
 
+
+// ==========================================
+// MAKE A MOVE
+// ==========================================
+
+function makeMove(index, player) {
+
+    board[index] = player;
+
+    cells[index].textContent = player;
+}
+
+
+// ==========================================
+// COMPUTER MOVE
+// ==========================================
+
+function computerMove() {
+
+    if (!gameActive) {
+        return;
+    }
+
+
+    // Find the best possible move
+
+    const bestMove = getBestMove();
+
+
+    makeMove(bestMove, "O");
+
+
+    // Check if computer won
+
+    const result = checkResult();
+
+    if (result) {
+        return;
+    }
+
+
+    // Back to player
+
+    currentPlayer = "X";
+
+    statusText.textContent =
+        "Your turn (X)";
+}
+
+
+// ==========================================
+// SMART COMPUTER
+// ==========================================
+
+function getBestMove() {
+
+    let bestScore = -Infinity;
+
+    let move;
+
+
+    for (let i = 0; i < board.length; i++) {
+
+        if (board[i] === "") {
+
+            board[i] = "O";
+
+
+            let score =
+                minimax(board, 0, false);
+
+
+            board[i] = "";
+
+
+            if (score > bestScore) {
+
+                bestScore = score;
+
+                move = i;
+            }
+        }
+    }
+
+
+    return move;
+}
+
+
+// ==========================================
+// MINIMAX AI
+// ==========================================
+
+function minimax(boardState, depth, isMaximizing) {
+
+    const result =
+        getWinner(boardState);
+
+
+    // Computer wins
+
+    if (result === "O") {
+        return 10 - depth;
+    }
+
+
+    // Player wins
+
+    if (result === "X") {
+        return depth - 10;
+    }
+
+
+    // Draw
+
+    if (!boardState.includes("")) {
+        return 0;
+    }
+
+
+    // COMPUTER'S TURN
+
+    if (isMaximizing) {
+
+        let bestScore = -Infinity;
+
+
+        for (let i = 0; i < boardState.length; i++) {
+
+            if (boardState[i] === "") {
+
+                boardState[i] = "O";
+
+
+                let score =
+                    minimax(
+                        boardState,
+                        depth + 1,
+                        false
+                    );
+
+
+                boardState[i] = "";
+
+
+                bestScore =
+                    Math.max(
+                        score,
+                        bestScore
+                    );
+            }
+        }
+
+
+        return bestScore;
+    }
+
+
+    // PLAYER'S TURN
+
+    else {
+
+        let bestScore = Infinity;
+
+
+        for (let i = 0; i < boardState.length; i++) {
+
+            if (boardState[i] === "") {
+
+                boardState[i] = "X";
+
+
+                let score =
+                    minimax(
+                        boardState,
+                        depth + 1,
+                        true
+                    );
+
+
+                boardState[i] = "";
+
+
+                bestScore =
+                    Math.min(
+                        score,
+                        bestScore
+                    );
+            }
+        }
+
+
+        return bestScore;
+    }
+}
+
+
+// ==========================================
+// CHECK WINNER
+// ==========================================
+
+function getWinner(boardState) {
+
+    for (let combination of winningCombinations) {
+
+        const a = combination[0];
+
+        const b = combination[1];
+
+        const c = combination[2];
+
+
+        if (
+            boardState[a] !== "" &&
+            boardState[a] === boardState[b] &&
+            boardState[a] === boardState[c]
+        ) {
+
+            return boardState[a];
+        }
+    }
+
+
+    return null;
+}
+
+
+// ==========================================
+// CHECK GAME RESULT
+// ==========================================
 
 function checkResult() {
 
     let winningCombination = null;
 
 
-    // Check every possible winning combination
-
     for (let combination of winningCombinations) {
 
         const a = combination[0];
+
         const b = combination[1];
+
         const c = combination[2];
 
 
@@ -112,9 +369,9 @@ function checkResult() {
     }
 
 
-    // =========================
-    // SOMEONE WON
-    // =========================
+    // ======================================
+    // WIN
+    // ======================================
 
     if (winningCombination) {
 
@@ -122,61 +379,68 @@ function checkResult() {
 
 
         statusText.textContent =
-            `Player ${currentPlayer} wins!`;
+            `${currentPlayer === "X"
+                ? "You win!"
+                : "Computer wins!"
+            }`;
 
 
-        // Draw the winning strike
+        // Draw winning strike
 
-        drawWinningLine(winningCombination);
+        drawWinningLine(
+            winningCombination
+        );
 
 
-        // Show winner popup
+        // Show popup
 
         showWinnerPopup();
 
 
-        // Launch confetti
+        // Confetti only when YOU win
 
-        createConfetti();
+        if (currentPlayer === "X") {
+
+            createConfetti();
+
+        }
 
 
-        return;
+        return true;
     }
 
 
-    // =========================
+    // ======================================
     // DRAW
-    // =========================
+    // ======================================
 
     if (!board.includes("")) {
 
         gameActive = false;
 
+
         statusText.textContent =
             "It's a draw!";
 
-        return;
+
+        winnerTitle.textContent =
+            "It's a Draw!";
+
+
+        winnerPopup.classList.add("show");
+
+
+        return true;
     }
 
 
-    // =========================
-    // NEXT PLAYER
-    // =========================
-
-    currentPlayer =
-        currentPlayer === "X"
-            ? "O"
-            : "X";
-
-
-    statusText.textContent =
-        `Player ${currentPlayer}'s turn`;
+    return false;
 }
 
 
-/* ==================================
-   DRAW WINNING STRIKE
-================================== */
+// ==========================================
+// WINNING LINE
+// ==========================================
 
 function drawWinningLine(combination) {
 
@@ -187,10 +451,12 @@ function drawWinningLine(combination) {
         cells[combination[2]];
 
 
+    const boardElement =
+        document.getElementById("board");
+
+
     const boardRect =
-        document
-            .getElementById("board")
-            .getBoundingClientRect();
+        boardElement.getBoundingClientRect();
 
 
     const firstRect =
@@ -200,8 +466,6 @@ function drawWinningLine(combination) {
     const lastRect =
         lastCell.getBoundingClientRect();
 
-
-    // Find the centre of first cell
 
     const startX =
         firstRect.left +
@@ -215,8 +479,6 @@ function drawWinningLine(combination) {
         boardRect.top;
 
 
-    // Find the centre of last cell
-
     const endX =
         lastRect.left +
         lastRect.width / 2 -
@@ -229,11 +491,12 @@ function drawWinningLine(combination) {
         boardRect.top;
 
 
-    // Calculate line length
+    const deltaX =
+        endX - startX;
 
-    const deltaX = endX - startX;
 
-    const deltaY = endY - startY;
+    const deltaY =
+        endY - startY;
 
 
     const length =
@@ -243,24 +506,24 @@ function drawWinningLine(combination) {
         );
 
 
-    // Calculate angle
-
     const angle =
-        Math.atan2(deltaY, deltaX) *
-        180 /
-        Math.PI;
+        Math.atan2(
+            deltaY,
+            deltaX
+        ) * 180 / Math.PI;
 
-
-    // Position the line
 
     winningLine.style.left =
         `${startX}px`;
 
+
     winningLine.style.top =
         `${startY}px`;
 
+
     winningLine.style.width =
         `${length}px`;
+
 
     winningLine.style.transform =
         `rotate(${angle}deg)`;
@@ -271,32 +534,37 @@ function drawWinningLine(combination) {
 }
 
 
-/* ==================================
-   WINNER POPUP
-================================== */
+// ==========================================
+// WINNER POPUP
+// ==========================================
 
 function showWinnerPopup() {
 
-    winnerTitle.textContent =
-        `Player ${currentPlayer} Wins!`;
+    if (currentPlayer === "X") {
+
+        winnerTitle.textContent =
+            "You Win!";
+
+    } else {
+
+        winnerTitle.textContent =
+            "Computer Wins!";
+
+    }
 
 
     winnerPopup.classList.add("show");
 }
 
 
-/* ==================================
-   CONFETTI
-================================== */
+// ==========================================
+// CONFETTI
+// ==========================================
 
 function createConfetti() {
 
-    // Clear old confetti
-
     confettiContainer.innerHTML = "";
 
-
-    // Create 120 confetti pieces
 
     for (let i = 0; i < 120; i++) {
 
@@ -307,13 +575,9 @@ function createConfetti() {
         piece.classList.add("confetti");
 
 
-        // Random horizontal position
-
         piece.style.left =
             `${Math.random() * 100}%`;
 
-
-        // Random size
 
         const size =
             Math.random() * 8 + 6;
@@ -322,19 +586,20 @@ function createConfetti() {
         piece.style.width =
             `${size}px`;
 
+
         piece.style.height =
             `${size * 1.6}px`;
 
 
-        // Random color
-
         const colors = [
+
             "#ff3b30",
             "#ffcc00",
             "#34c759",
             "#007aff",
             "#af52de",
             "#ff9500"
+
         ];
 
 
@@ -347,13 +612,9 @@ function createConfetti() {
             ];
 
 
-        // Random animation speed
-
         piece.style.animationDuration =
             `${Math.random() * 2 + 2}s`;
 
-
-        // Random delay
 
         piece.style.animationDelay =
             `${Math.random() * 0.5}s`;
@@ -363,8 +624,6 @@ function createConfetti() {
     }
 
 
-    // Remove confetti after animation
-
     setTimeout(() => {
 
         confettiContainer.innerHTML = "";
@@ -373,9 +632,9 @@ function createConfetti() {
 }
 
 
-/* ==================================
-   RESTART GAME
-================================== */
+// ==========================================
+// RESTART GAME
+// ==========================================
 
 function restartGame() {
 
@@ -388,11 +647,8 @@ function restartGame() {
 
     currentPlayer = "X";
 
-
     gameActive = true;
 
-
-    // Clear all cells
 
     cells.forEach((cell) => {
 
@@ -401,32 +657,26 @@ function restartGame() {
     });
 
 
-    // Reset status
-
     statusText.textContent =
-        "Player X's turn";
+        "Your turn (X)";
 
-
-    // Hide winning line
 
     winningLine.style.display =
         "none";
 
 
-    // Hide winner popup
+    winnerPopup.classList.remove(
+        "show"
+    );
 
-    winnerPopup.classList.remove("show");
-
-
-    // Clear confetti
 
     confettiContainer.innerHTML = "";
 }
 
 
-/* ==================================
-   RESTART BUTTONS
-================================== */
+// ==========================================
+// RESTART BUTTONS
+// ==========================================
 
 restartButton.addEventListener(
     "click",
