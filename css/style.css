@@ -5,77 +5,138 @@
 }
 
 
-/* =================================
-   BODY
-================================= */
+/* =========================
+   PAGE BACKGROUNDS
+========================= */
 
 body {
-
     min-height: 100vh;
 
     display: flex;
-
     justify-content: center;
-
     align-items: center;
 
     font-family: Arial, sans-serif;
 
     overflow: hidden;
 
-    transition:
-        background 0.5s ease;
+    transition: background 0.5s ease;
 }
 
 
-/* =================================
-   DIFFICULTY THEMES
-================================= */
+/* ONE PLAYER THEMES */
 
-.easy-theme {
-
-    background: #eaf8ed;
+.one-player.easy-theme {
+    background: #e8f5e9;
 }
 
-
-.medium-theme {
-
+.one-player.medium-theme {
     background: #fff3df;
 }
 
-
-.hard-theme {
-
-    background: #ffe7e7;
+.one-player.hard-theme {
+    background: #ffebeb;
 }
 
 
-/* =================================
-   MAIN CONTAINER
-================================= */
+/* TWO PLAYER BACKGROUND */
+
+.two-player-theme {
+    background: #e9eef5;
+}
+
+
+/* =========================
+   GAME CONTAINER
+========================= */
 
 .game-container {
-
     text-align: center;
-
-    transition: 0.3s;
 }
 
+
+/* =========================
+   TITLE
+========================= */
 
 h1 {
-
     font-size: 42px;
-
-    margin-bottom: 8px;
+    margin-bottom: 15px;
 }
 
 
-/* =================================
-   DIFFICULTY LABEL
-================================= */
+/* =========================
+   MODE BUTTONS
+========================= */
+
+.mode-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+
+.mode-btn {
+    border: none;
+
+    padding: 11px 22px;
+
+    border-radius: 9px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s,
+        box-shadow 0.15s,
+        background 0.15s,
+        opacity 0.15s;
+}
+
+
+/* BOTH BUTTONS HAVE THE SAME COLOR */
+
+.one-player-mode,
+.two-player-mode {
+    background: #536dfe;
+    color: white;
+}
+
+
+/* HOVER */
+
+.mode-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+
+/* SELECTED MODE */
+
+.mode-btn.active {
+    background: #34a853;
+
+    transform: scale(1.06);
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.25);
+
+    opacity: 1;
+}
+
+
+/* =========================
+   DIFFICULTY
+========================= */
 
 .difficulty-label {
-
     font-size: 16px;
 
     font-weight: bold;
@@ -86,12 +147,7 @@ h1 {
 }
 
 
-/* =================================
-   DIFFICULTY BUTTONS
-================================= */
-
 .difficulty-buttons {
-
     display: flex;
 
     justify-content: center;
@@ -103,7 +159,6 @@ h1 {
 
 
 .difficulty-btn {
-
     border: none;
 
     padding: 10px 18px;
@@ -126,41 +181,36 @@ h1 {
 
 
 .difficulty-btn:hover {
-
     transform: translateY(-2px);
 
     opacity: 0.9;
 }
 
 
-/* Easy = Green */
+/* EASY */
 
 .easy-btn {
-
     background: #34a853;
 }
 
 
-/* Medium = Orange */
+/* MEDIUM */
 
 .medium-btn {
-
     background: #f29900;
 }
 
 
-/* Hard = Red */
+/* HARD */
 
 .hard-btn {
-
     background: #ea4335;
 }
 
 
-/* Selected difficulty */
+/* SELECTED DIFFICULTY */
 
 .difficulty-btn.active {
-
     transform: scale(1.08);
 
     box-shadow:
@@ -170,12 +220,11 @@ h1 {
 }
 
 
-/* =================================
+/* =========================
    STATUS
-================================= */
+========================= */
 
 #status {
-
     font-size: 20px;
 
     margin-bottom: 25px;
@@ -184,12 +233,11 @@ h1 {
 }
 
 
-/* =================================
+/* =========================
    BOARD
-================================= */
+========================= */
 
 .board {
-
     position: relative;
 
     display: grid;
@@ -206,10 +254,12 @@ h1 {
 }
 
 
+/* =========================
+   CELLS
+========================= */
+
 .cell {
-
     width: 100px;
-
     height: 100px;
 
     border: none;
@@ -234,19 +284,17 @@ h1 {
 
 
 .cell:hover {
-
     background: #eeeeee;
 
     transform: scale(1.02);
 }
 
 
-/* =================================
+/* =========================
    WINNING LINE
-================================= */
+========================= */
 
 #winning-line {
-
     position: absolute;
 
     height: 7px;
@@ -268,13 +316,12 @@ h1 {
 }
 
 
-/* =================================
+/* =========================
    RESTART BUTTON
-================================= */
+========================= */
 
 #restart-btn,
 #popup-restart-btn {
-
     padding: 12px 25px;
 
     border: none;
@@ -295,19 +342,17 @@ h1 {
 
 #restart-btn:hover,
 #popup-restart-btn:hover {
-
     background: #444;
 
     transform: translateY(-2px);
 }
 
 
-/* =================================
-   POPUP
-================================= */
+/* =========================
+   WINNER POPUP
+========================= */
 
 .popup-overlay {
-
     position: fixed;
 
     inset: 0;
@@ -318,7 +363,8 @@ h1 {
 
     align-items: center;
 
-    background: rgba(0, 0, 0, 0.45);
+    background:
+        rgba(0, 0, 0, 0.45);
 
     backdrop-filter: blur(4px);
 
@@ -333,7 +379,6 @@ h1 {
 
 
 .popup-overlay.show {
-
     opacity: 1;
 
     visibility: visible;
@@ -341,7 +386,6 @@ h1 {
 
 
 .winner-popup {
-
     width: 350px;
 
     padding: 35px;
@@ -361,21 +405,23 @@ h1 {
 }
 
 
-.popup-overlay.show
-.winner-popup {
-
+.popup-overlay.show .winner-popup {
     transform: scale(1);
 }
 
 
-.trophy {
+/* =========================
+   TROPHY
+========================= */
 
+.trophy {
     font-size: 65px;
 
     margin-bottom: 10px;
 
     animation:
-        trophyBounce 0.8s ease-in-out;
+        trophyBounce 0.8s
+        ease-in-out;
 }
 
 
@@ -398,12 +444,14 @@ h1 {
             scale(1)
             rotate(0deg);
     }
-
 }
 
 
-.winner-popup h2 {
+/* =========================
+   POPUP TEXT
+========================= */
 
+.winner-popup h2 {
     font-size: 32px;
 
     margin-bottom: 8px;
@@ -411,7 +459,6 @@ h1 {
 
 
 .winner-popup p {
-
     font-size: 18px;
 
     margin-bottom: 25px;
@@ -420,12 +467,11 @@ h1 {
 }
 
 
-/* =================================
+/* =========================
    CONFETTI
-================================= */
+========================= */
 
 #confetti-container {
-
     position: fixed;
 
     inset: 0;
@@ -439,7 +485,6 @@ h1 {
 
 
 .confetti {
-
     position: absolute;
 
     top: -20px;
@@ -458,7 +503,6 @@ h1 {
 @keyframes confettiFall {
 
     0% {
-
         transform:
             translateY(0)
             rotate(0deg);
@@ -466,14 +510,11 @@ h1 {
         opacity: 1;
     }
 
-
     100% {
-
         transform:
             translateY(110vh)
             rotate(720deg);
 
         opacity: 0;
     }
-
 }

@@ -3,94 +3,156 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Tic-Tac-Toe</title>
 
-    <link rel="stylesheet" href="css/style.css">
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
 </head>
 
-<body class="easy-theme">
+<body class="one-player easy-theme">
 
-    <!-- Confetti -->
     <div id="confetti-container"></div>
-
 
     <main class="game-container">
 
         <h1>Tic-Tac-Toe</h1>
 
-        <p class="difficulty-label">
-            Choose Difficulty
-        </p>
-
-
-        <!-- Difficulty Buttons -->
-
-        <div class="difficulty-buttons">
+        <!-- GAME MODE BUTTONS -->
+        <div class="mode-buttons">
 
             <button
-                id="easy-btn"
-                class="difficulty-btn easy-btn active"
+                id="one-player-btn"
+                class="mode-btn one-player-mode active"
             >
-                Easy
+                1 Player
             </button>
 
             <button
-                id="medium-btn"
-                class="difficulty-btn medium-btn"
+                id="two-player-btn"
+                class="mode-btn two-player-mode"
             >
-                Medium
-            </button>
-
-            <button
-                id="hard-btn"
-                class="difficulty-btn hard-btn"
-            >
-                Hard
+                2 Players
             </button>
 
         </div>
 
+        <!-- DIFFICULTY -->
+        <div
+            id="difficulty-section"
+            class="difficulty-section"
+        >
 
+            <p class="difficulty-label">
+                Choose Difficulty
+            </p>
+
+            <div class="difficulty-buttons">
+
+                <button
+                    id="easy-btn"
+                    class="difficulty-btn easy-btn active"
+                >
+                    Easy
+                </button>
+
+                <button
+                    id="medium-btn"
+                    class="difficulty-btn medium-btn"
+                >
+                    Medium
+                </button>
+
+                <button
+                    id="hard-btn"
+                    class="difficulty-btn hard-btn"
+                >
+                    Hard
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- STATUS -->
         <p id="status">
             Your turn (X)
         </p>
 
+        <!-- BOARD -->
+        <div
+            class="board"
+            id="board"
+        >
 
-        <!-- Game Board -->
-
-        <div class="board" id="board">
-
-            <!-- Winning line -->
             <div id="winning-line"></div>
 
+            <button
+                class="cell"
+                data-index="0"
+            ></button>
 
-            <button class="cell" data-index="0"></button>
-            <button class="cell" data-index="1"></button>
-            <button class="cell" data-index="2"></button>
+            <button
+                class="cell"
+                data-index="1"
+            ></button>
 
-            <button class="cell" data-index="3"></button>
-            <button class="cell" data-index="4"></button>
-            <button class="cell" data-index="5"></button>
+            <button
+                class="cell"
+                data-index="2"
+            ></button>
 
-            <button class="cell" data-index="6"></button>
-            <button class="cell" data-index="7"></button>
-            <button class="cell" data-index="8"></button>
+            <button
+                class="cell"
+                data-index="3"
+            ></button>
+
+            <button
+                class="cell"
+                data-index="4"
+            ></button>
+
+            <button
+                class="cell"
+                data-index="5"
+            ></button>
+
+            <button
+                class="cell"
+                data-index="6"
+            ></button>
+
+            <button
+                class="cell"
+                data-index="7"
+            ></button>
+
+            <button
+                class="cell"
+                data-index="8"
+            ></button>
 
         </div>
 
-
+        <!-- RESTART -->
         <button id="restart-btn">
             Restart Game
         </button>
 
     </main>
 
-
-    <!-- Winner Popup -->
-
-    <div id="winner-popup" class="popup-overlay">
+    <!-- WINNER POPUP -->
+    <div
+        id="winner-popup"
+        class="popup-overlay"
+    >
 
         <div class="winner-popup">
 
@@ -113,7 +175,6 @@
         </div>
 
     </div>
-
 
     <script src="js/script.js"></script>
 

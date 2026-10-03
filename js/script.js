@@ -46,9 +46,17 @@ const confettiContainer =
     );
 
 
-/* =================================
-   DIFFICULTY BUTTONS
-================================= */
+const onePlayerButton =
+    document.getElementById(
+        "one-player-btn"
+    );
+
+
+const twoPlayerButton =
+    document.getElementById(
+        "two-player-btn"
+    );
+
 
 const easyButton =
     document.getElementById(
@@ -68,18 +76,25 @@ const hardButton =
     );
 
 
-/* =================================
+const difficultySection =
+    document.getElementById(
+        "difficulty-section"
+    );
+
+
+/* =========================
    GAME VARIABLES
-================================= */
+========================= */
 
 let board = [
-
-    "", "", "",
-
-    "", "", "",
-
-    "", "", ""
-
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
 ];
 
 
@@ -89,20 +104,17 @@ let currentPlayer = "X";
 let gameActive = true;
 
 
-/*
-    Default difficulty
-*/
+let gameMode = "one-player";
+
 
 let difficulty = "easy";
 
 
-/* =================================
+/* =========================
    WINNING COMBINATIONS
-================================= */
+========================= */
 
 const winningCombinations = [
-
-    // Rows
 
     [0, 1, 2],
 
@@ -110,17 +122,11 @@ const winningCombinations = [
 
     [6, 7, 8],
 
-
-    // Columns
-
     [0, 3, 6],
 
     [1, 4, 7],
 
     [2, 5, 8],
-
-
-    // Diagonals
 
     [0, 4, 8],
 
@@ -129,21 +135,23 @@ const winningCombinations = [
 ];
 
 
-/* =================================
-   PLAYER CLICK
-================================= */
+/* =========================
+   CELL CLICK
+========================= */
 
-cells.forEach((cell) => {
+cells.forEach(
+    (cell) => {
 
-    cell.addEventListener(
-        "click",
-        handlePlayerMove
-    );
+        cell.addEventListener(
+            "click",
+            handleCellClick
+        );
 
-});
+    }
+);
 
 
-function handlePlayerMove(event) {
+function handleCellClick(event) {
 
     const clickedIndex =
         Number(
@@ -151,74 +159,107 @@ function handlePlayerMove(event) {
         );
 
 
-    /*
-        Don't allow moves when:
-
-        - Square is occupied
-        - Game is finished
-        - Computer is playing
-    */
-
     if (
-
         board[clickedIndex] !== "" ||
-
-        !gameActive ||
-
-        currentPlayer !== "X"
-
+        !gameActive
     ) {
 
         return;
+
     }
 
 
-    // Player makes move
+    /* COMPUTER CANNOT BE CLICKED */
+
+    if (
+        gameMode === "one-player" &&
+        currentPlayer === "O"
+    ) {
+
+        return;
+
+    }
+
+
+    /* MAKE PLAYER MOVE */
 
     makeMove(
         clickedIndex,
-        "X"
+        currentPlayer
     );
 
 
-    // Check result
+    /* CHECK WIN / DRAW */
 
-    if (checkResult()) {
+    if (
+        checkResult()
+    ) {
 
         return;
+
     }
 
 
-    // Computer's turn
+    /* =========================
+       ONE PLAYER
+    ========================= */
 
-    currentPlayer = "O";
+    if (
+        gameMode === "one-player"
+    ) {
+
+        currentPlayer = "O";
 
 
-    statusText.textContent =
-        "Computer is thinking...";
+        statusText.textContent =
+            "Computer is thinking...";
 
 
-    setTimeout(
+        setTimeout(
+            computerMove,
+            500
+        );
 
-        computerMove,
 
-        500
+        return;
 
-    );
+    }
+
+
+    /* =========================
+       TWO PLAYER
+    ========================= */
+
+    if (
+        gameMode === "two-player"
+    ) {
+
+        currentPlayer =
+            currentPlayer === "X"
+                ? "O"
+                : "X";
+
+
+        statusText.textContent =
+            `Player ${currentPlayer}'s turn`;
+
+    }
 
 }
 
 
-/* =================================
+/* =========================
    MAKE MOVE
-================================= */
+========================= */
 
 function makeMove(
     index,
     player
 ) {
 
-    board[index] = player;
+    board[index] =
+        player;
+
 
     cells[index].textContent =
         player;
@@ -226,15 +267,18 @@ function makeMove(
 }
 
 
-/* =================================
+/* =========================
    COMPUTER MOVE
-================================= */
+========================= */
 
 function computerMove() {
 
-    if (!gameActive) {
+    if (
+        !gameActive
+    ) {
 
         return;
+
     }
 
 
@@ -248,27 +292,28 @@ function computerMove() {
     );
 
 
-    // Check result
-
-    if (checkResult()) {
+    if (
+        checkResult()
+    ) {
 
         return;
+
     }
 
 
-    // Player's turn
-
-    currentPlayer = "X";
+    currentPlayer =
+        "X";
 
 
     statusText.textContent =
         "Your turn (X)";
+
 }
 
 
-/* =================================
-   COMPUTER AI
-================================= */
+/* =========================
+   COMPUTER DIFFICULTY
+========================= */
 
 function getComputerMove() {
 
@@ -276,20 +321,17 @@ function getComputerMove() {
         getEmptyCells();
 
 
-    /*
+    /* =========================
        EASY
-       ----
-
-       Mostly random.
-
-       Sometimes makes a smart move.
-    */
+    ========================= */
 
     if (
         difficulty === "easy"
     ) {
 
-        // 55% random
+        /*
+        Easy is very random.
+        */
 
         if (
             Math.random() < 0.55
@@ -298,89 +340,94 @@ function getComputerMove() {
             return randomChoice(
                 emptyCells
             );
+
         }
 
 
         return getSmartMove(
             0.45
         );
+
     }
 
 
-    /*
+    /* =========================
        MEDIUM
-       ------
-
-       Usually smart.
-
-       But still makes mistakes.
-    */
+    ========================= */
 
     if (
         difficulty === "medium"
     ) {
 
-        // 20% random
+        /*
+        Medium is mostly smart,
+        but sometimes makes
+        random moves.
+        */
 
         if (
-            Math.random() < 0.20
+            Math.random() < 0.10
         ) {
 
             return randomChoice(
                 emptyCells
             );
+
         }
 
 
         return getSmartMove(
-            0.80
+            0.90
         );
+
     }
 
 
-    /*
+    /* =========================
        HARD
-       ----
-
-       Extremely smart.
-
-       Very small chance of making
-       a mistake.
-
-       Still technically beatable.
-    */
+    ========================= */
 
     if (
         difficulty === "hard"
     ) {
 
-        // Only 3% random
+        /*
+        Hard is still strong,
+        but has a small chance
+        of making a dumb move.
+
+        7% random
+        93% smart
+        */
 
         if (
-            Math.random() < 0.03
+            Math.random() < 0.07
         ) {
 
             return randomChoice(
                 emptyCells
             );
+
         }
 
 
         return getSmartMove(
-            0.97
+            0.93
         );
+
     }
 
 
     return randomChoice(
         emptyCells
     );
+
 }
 
 
-/* =================================
+/* =========================
    SMART MOVE
-================================= */
+========================= */
 
 function getSmartMove(
     smartness
@@ -390,13 +437,7 @@ function getSmartMove(
         getEmptyCells();
 
 
-    /*
-       Try to WIN.
-
-       The computer doesn't always
-       take the winning move on
-       lower difficulties.
-    */
+    /* TRY TO WIN */
 
     const winningMove =
         findWinningMove("O");
@@ -408,12 +449,11 @@ function getSmartMove(
     ) {
 
         return winningMove;
+
     }
 
 
-    /*
-       Try to BLOCK the player.
-    */
+    /* TRY TO BLOCK PLAYER */
 
     const blockingMove =
         findWinningMove("X");
@@ -425,12 +465,11 @@ function getSmartMove(
     ) {
 
         return blockingMove;
+
     }
 
 
-    /*
-       Take center.
-    */
+    /* TAKE CENTER */
 
     if (
         board[4] === "" &&
@@ -438,20 +477,17 @@ function getSmartMove(
     ) {
 
         return 4;
+
     }
 
 
-    /*
-       Take a corner.
-    */
+    /* TAKE CORNER */
 
     const corners = [
-
         0,
         2,
         6,
         8
-
     ];
 
 
@@ -463,32 +499,29 @@ function getSmartMove(
 
 
     if (
-
         availableCorners.length > 0 &&
-
         Math.random() < smartness
-
     ) {
 
         return randomChoice(
             availableCorners
         );
+
     }
 
 
-    /*
-       Otherwise pick an empty square.
-    */
+    /* OTHERWISE RANDOM */
 
     return randomChoice(
         emptyCells
     );
+
 }
 
 
-/* =================================
+/* =========================
    FIND WINNING MOVE
-================================= */
+========================= */
 
 function findWinningMove(
     player
@@ -505,17 +538,20 @@ function findWinningMove(
         ) {
 
             continue;
+
         }
 
 
-        board[i] = player;
+        board[i] =
+            player;
 
 
         const winner =
             getWinner();
 
 
-        board[i] = "";
+        board[i] =
+            "";
 
 
         if (
@@ -523,17 +559,20 @@ function findWinningMove(
         ) {
 
             return i;
+
         }
+
     }
 
 
     return null;
+
 }
 
 
-/* =================================
+/* =========================
    GET EMPTY CELLS
-================================= */
+========================= */
 
 function getEmptyCells() {
 
@@ -551,17 +590,20 @@ function getEmptyCells() {
         ) {
 
             emptyCells.push(i);
+
         }
+
     }
 
 
     return emptyCells;
+
 }
 
 
-/* =================================
+/* =========================
    RANDOM CHOICE
-================================= */
+========================= */
 
 function randomChoice(
     array
@@ -573,12 +615,13 @@ function randomChoice(
             array.length
         )
     ];
+
 }
 
 
-/* =================================
+/* =========================
    GET WINNER
-================================= */
+========================= */
 
 function getWinner() {
 
@@ -590,35 +633,36 @@ function getWinner() {
         const a =
             combination[0];
 
+
         const b =
             combination[1];
+
 
         const c =
             combination[2];
 
 
         if (
-
             board[a] !== "" &&
-
             board[a] === board[b] &&
-
             board[a] === board[c]
-
         ) {
 
             return board[a];
+
         }
+
     }
 
 
     return null;
+
 }
 
 
-/* =================================
+/* =========================
    CHECK RESULT
-================================= */
+========================= */
 
 function checkResult() {
 
@@ -634,104 +678,134 @@ function checkResult() {
         const a =
             combination[0];
 
+
         const b =
             combination[1];
+
 
         const c =
             combination[2];
 
 
         if (
-
             board[a] !== "" &&
-
             board[a] === board[b] &&
-
             board[a] === board[c]
-
         ) {
 
             winningCombination =
                 combination;
 
+
             break;
+
         }
+
     }
 
 
-    /* ==============================
-       WIN
-    ============================== */
+    /* =========================
+       SOMEONE WON
+    ========================= */
 
     if (
         winningCombination
     ) {
 
-        gameActive = false;
+        gameActive =
+            false;
 
+
+        /* ONE PLAYER */
 
         if (
-            currentPlayer === "X"
+            gameMode === "one-player"
         ) {
 
+            if (
+                currentPlayer === "X"
+            ) {
+
+                statusText.textContent =
+                    "You win! 🎉";
+
+
+                winnerTitle.textContent =
+                    "You Win!";
+
+
+                winnerMessage.textContent =
+                    "Amazing! You beat the computer!";
+
+
+                createConfetti();
+
+            } else {
+
+                statusText.textContent =
+                    "Computer wins!";
+
+
+                winnerTitle.textContent =
+                    "Computer Wins!";
+
+
+                winnerMessage.textContent =
+                    "The computer got you this time!";
+
+            }
+
+        }
+
+
+        /* TWO PLAYER */
+
+        else {
+
             statusText.textContent =
-                "You win! 🎉";
+                `Player ${currentPlayer} wins! 🎉`;
 
 
             winnerTitle.textContent =
-                "You Win!";
+                `Player ${currentPlayer} Wins!`;
 
 
             winnerMessage.textContent =
-                "Amazing! You beat the computer!";
+                `Congratulations Player ${currentPlayer}!`;
 
 
             createConfetti();
 
         }
 
-        else {
 
-            statusText.textContent =
-                "Computer wins!";
-
-
-            winnerTitle.textContent =
-                "Computer Wins!";
-
-
-            winnerMessage.textContent =
-                "The computer got you this time!";
-
-        }
-
-
-        /*
-           Draw the line BEFORE
-           showing the popup.
-        */
+        /* DRAW RED LINE */
 
         drawWinningLine(
             winningCombination
         );
 
 
+        /* SHOW POPUP */
+
         showWinnerPopup();
 
 
         return true;
+
     }
 
 
-    /* ==============================
+    /* =========================
        DRAW
-    ============================== */
+    ========================= */
 
     if (
         !board.includes("")
     ) {
 
-        gameActive = false;
+        gameActive =
+            false;
 
 
         statusText.textContent =
@@ -752,16 +826,18 @@ function checkResult() {
 
 
         return true;
+
     }
 
 
     return false;
+
 }
 
 
-/* =================================
-   WINNING LINE
-================================= */
+/* =========================
+   DRAW WINNING LINE
+========================= */
 
 function drawWinningLine(
     combination
@@ -800,49 +876,29 @@ function drawWinningLine(
             .getBoundingClientRect();
 
 
-    /*
-       CENTER OF FIRST CELL
-    */
-
     const startX =
         firstRect.left +
-
         firstRect.width / 2 -
-
         boardRect.left;
 
 
     const startY =
         firstRect.top +
-
         firstRect.height / 2 -
-
         boardRect.top;
 
 
-    /*
-       CENTER OF LAST CELL
-    */
-
     const endX =
         lastRect.left +
-
         lastRect.width / 2 -
-
         boardRect.left;
 
 
     const endY =
         lastRect.top +
-
         lastRect.height / 2 -
-
         boardRect.top;
 
-
-    /*
-       Distance
-    */
 
     const deltaX =
         endX - startX;
@@ -854,24 +910,10 @@ function drawWinningLine(
 
     const length =
         Math.sqrt(
-
             deltaX * deltaX +
-
             deltaY * deltaY
-
         );
 
-
-    /*
-       Angle
-
-       This handles:
-
-       →
-       ↓
-       ↘
-       ↙
-    */
 
     const angle =
         Math.atan2(
@@ -881,10 +923,6 @@ function drawWinningLine(
         180 /
         Math.PI;
 
-
-    /*
-       Position line
-    */
 
     winningLine.style.left =
         `${startX}px`;
@@ -904,24 +942,26 @@ function drawWinningLine(
 
     winningLine.style.display =
         "block";
+
 }
 
 
-/* =================================
+/* =========================
    WINNER POPUP
-================================= */
+========================= */
 
 function showWinnerPopup() {
 
     winnerPopup.classList.add(
         "show"
     );
+
 }
 
 
-/* =================================
+/* =========================
    CONFETTI
-================================= */
+========================= */
 
 function createConfetti() {
 
@@ -999,6 +1039,7 @@ function createConfetti() {
         confettiContainer.appendChild(
             piece
         );
+
     }
 
 
@@ -1009,15 +1050,122 @@ function createConfetti() {
                 "";
 
         },
-
         5000
     );
+
 }
 
 
-/* =================================
+/* =========================
+   CHANGE GAME MODE
+========================= */
+
+function changeGameMode(
+    newMode
+) {
+
+    gameMode =
+        newMode;
+
+
+    /* REMOVE OLD THEMES */
+
+    document.body.classList.remove(
+
+        "one-player",
+
+        "two-player-theme",
+
+        "easy-theme",
+
+        "medium-theme",
+
+        "hard-theme"
+
+    );
+
+
+    /* =========================
+       ONE PLAYER
+    ========================= */
+
+    if (
+        newMode === "one-player"
+    ) {
+
+        document.body.classList.add(
+            "one-player"
+        );
+
+
+        document.body.classList.add(
+            `${difficulty}-theme`
+        );
+
+
+        difficultySection.style.display =
+            "block";
+
+
+        /* SELECT 1 PLAYER */
+
+        onePlayerButton.classList.add(
+            "active"
+        );
+
+
+        twoPlayerButton.classList.remove(
+            "active"
+        );
+
+
+        statusText.textContent =
+            "Your turn (X)";
+
+    }
+
+
+    /* =========================
+       TWO PLAYER
+    ========================= */
+
+    else {
+
+        document.body.classList.add(
+            "two-player-theme"
+        );
+
+
+        difficultySection.style.display =
+            "none";
+
+
+        /* SELECT 2 PLAYERS */
+
+        twoPlayerButton.classList.add(
+            "active"
+        );
+
+
+        onePlayerButton.classList.remove(
+            "active"
+        );
+
+
+        statusText.textContent =
+            "Player X's turn";
+
+    }
+
+
+    restartGame();
+
+}
+
+
+/* =========================
    CHANGE DIFFICULTY
-================================= */
+========================= */
 
 function changeDifficulty(
     newDifficulty
@@ -1027,9 +1175,16 @@ function changeDifficulty(
         newDifficulty;
 
 
-    /*
-       Change screen theme
-    */
+    if (
+        gameMode !== "one-player"
+    ) {
+
+        return;
+
+    }
+
+
+    /* CHANGE BACKGROUND */
 
     document.body.classList.remove(
 
@@ -1043,33 +1198,28 @@ function changeDifficulty(
 
 
     document.body.classList.add(
-
         `${newDifficulty}-theme`
-
     );
 
 
-    /*
-       Remove active from
-       all buttons
-    */
+    /* REMOVE ACTIVE */
 
     easyButton.classList.remove(
         "active"
     );
 
+
     mediumButton.classList.remove(
         "active"
     );
+
 
     hardButton.classList.remove(
         "active"
     );
 
 
-    /*
-       Highlight selected button
-    */
+    /* ADD ACTIVE */
 
     if (
         newDifficulty === "easy"
@@ -1104,18 +1254,42 @@ function changeDifficulty(
     }
 
 
-    /*
-       Start a fresh game when
-       difficulty changes.
-    */
-
     restartGame();
+
 }
 
 
-/* =================================
+/* =========================
+   MODE BUTTON EVENTS
+========================= */
+
+onePlayerButton.addEventListener(
+    "click",
+    () => {
+
+        changeGameMode(
+            "one-player"
+        );
+
+    }
+);
+
+
+twoPlayerButton.addEventListener(
+    "click",
+    () => {
+
+        changeGameMode(
+            "two-player"
+        );
+
+    }
+);
+
+
+/* =========================
    DIFFICULTY BUTTON EVENTS
-================================= */
+========================= */
 
 easyButton.addEventListener(
     "click",
@@ -1153,32 +1327,38 @@ hardButton.addEventListener(
 );
 
 
-/* =================================
-   RESTART
-================================= */
+/* =========================
+   RESTART GAME
+========================= */
 
 function restartGame() {
 
     board = [
 
-        "", "", "",
+        "",
+        "",
+        "",
 
-        "", "", "",
+        "",
+        "",
+        "",
 
-        "", "", ""
+        "",
+        "",
+        ""
 
     ];
 
 
-    currentPlayer = "X";
+    currentPlayer =
+        "X";
 
 
-    gameActive = true;
+    gameActive =
+        true;
 
 
-    /*
-       Clear cells
-    */
+    /* CLEAR CELLS */
 
     cells.forEach(
         (cell) => {
@@ -1190,13 +1370,24 @@ function restartGame() {
     );
 
 
-    statusText.textContent =
-        "Your turn (X)";
+    /* STATUS */
+
+    if (
+        gameMode === "one-player"
+    ) {
+
+        statusText.textContent =
+            "Your turn (X)";
+
+    } else {
+
+        statusText.textContent =
+            "Player X's turn";
+
+    }
 
 
-    /*
-       Hide winning line
-    */
+    /* HIDE WINNING LINE */
 
     winningLine.style.display =
         "none";
@@ -1206,27 +1397,24 @@ function restartGame() {
         "none";
 
 
-    /*
-       Hide popup
-    */
+    /* HIDE POPUP */
 
     winnerPopup.classList.remove(
         "show"
     );
 
 
-    /*
-       Clear confetti
-    */
+    /* REMOVE CONFETTI */
 
     confettiContainer.innerHTML =
         "";
+
 }
 
 
-/* =================================
+/* =========================
    RESTART BUTTONS
-================================= */
+========================= */
 
 restartButton.addEventListener(
     "click",
