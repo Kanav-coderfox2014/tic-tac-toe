@@ -21,11 +21,36 @@
 
     <div id="confetti-container"></div>
 
+    <!-- SCOREBOARD -->
+    <aside class="scoreboard">
+
+        <h2>Score</h2>
+
+        <div class="score-item">
+            <span>🏆 Won</span>
+            <strong id="wins">0</strong>
+        </div>
+
+        <div class="score-item">
+            <span>❌ Lost</span>
+            <strong id="losses">0</strong>
+        </div>
+
+        <div class="score-item">
+            <span>🤝 Draws</span>
+            <strong id="draws">0</strong>
+        </div>
+
+    </aside>
+
+
     <main class="game-container">
 
         <h1>Tic-Tac-Toe</h1>
 
-        <!-- GAME MODE BUTTONS -->
+
+        <!-- GAME MODE -->
+
         <div class="mode-buttons">
 
             <button
@@ -44,7 +69,9 @@
 
         </div>
 
+
         <!-- DIFFICULTY -->
+
         <div
             id="difficulty-section"
             class="difficulty-section"
@@ -81,12 +108,16 @@
 
         </div>
 
+
         <!-- STATUS -->
+
         <p id="status">
             Your turn (X)
         </p>
 
+
         <!-- BOARD -->
+
         <div
             class="board"
             id="board"
@@ -141,14 +172,18 @@
 
         </div>
 
+
         <!-- RESTART -->
+
         <button id="restart-btn">
             Restart Game
         </button>
 
     </main>
 
+
     <!-- WINNER POPUP -->
+
     <div
         id="winner-popup"
         class="popup-overlay"
@@ -175,6 +210,7 @@
         </div>
 
     </div>
+
 
     <script src="js/script.js"></script>
 

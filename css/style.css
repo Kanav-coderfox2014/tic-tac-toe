@@ -6,7 +6,7 @@
 
 
 /* =========================
-   PAGE BACKGROUNDS
+   PAGE
 ========================= */
 
 body {
@@ -24,7 +24,9 @@ body {
 }
 
 
-/* ONE PLAYER THEMES */
+/* =========================
+   BACKGROUNDS
+========================= */
 
 .one-player.easy-theme {
     background: #e8f5e9;
@@ -38,11 +40,71 @@ body {
     background: #ffebeb;
 }
 
-
-/* TWO PLAYER BACKGROUND */
-
 .two-player-theme {
     background: #e9eef5;
+}
+
+
+/* =========================
+   SCOREBOARD
+========================= */
+
+.scoreboard {
+    position: fixed;
+
+    left: 30px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 170px;
+
+    padding: 20px;
+
+    background: rgba(255, 255, 255, 0.85);
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.12);
+
+    text-align: center;
+
+    backdrop-filter: blur(5px);
+}
+
+
+.scoreboard h2 {
+    font-size: 24px;
+
+    margin-bottom: 18px;
+}
+
+
+.score-item {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 10px 5px;
+
+    margin-bottom: 6px;
+
+    border-radius: 8px;
+
+    background: rgba(0, 0, 0, 0.04);
+}
+
+
+.score-item span {
+    font-size: 15px;
+}
+
+
+.score-item strong {
+    font-size: 20px;
 }
 
 
@@ -61,6 +123,7 @@ body {
 
 h1 {
     font-size: 42px;
+
     margin-bottom: 15px;
 }
 
@@ -101,24 +164,24 @@ h1 {
 }
 
 
-/* BOTH BUTTONS HAVE THE SAME COLOR */
+/* SAME COLOR WHEN NOT SELECTED */
 
 .one-player-mode,
 .two-player-mode {
     background: #536dfe;
+
     color: white;
 }
 
 
-/* HOVER */
-
 .mode-btn:hover {
     transform: translateY(-2px);
+
     opacity: 0.9;
 }
 
 
-/* SELECTED MODE */
+/* SELECTED */
 
 .mode-btn.active {
     background: #34a853;
@@ -187,28 +250,20 @@ h1 {
 }
 
 
-/* EASY */
-
 .easy-btn {
     background: #34a853;
 }
 
-
-/* MEDIUM */
 
 .medium-btn {
     background: #f29900;
 }
 
 
-/* HARD */
-
 .hard-btn {
     background: #ea4335;
 }
 
-
-/* SELECTED DIFFICULTY */
 
 .difficulty-btn.active {
     transform: scale(1.08);
@@ -253,10 +308,6 @@ h1 {
     margin-bottom: 25px;
 }
 
-
-/* =========================
-   CELLS
-========================= */
 
 .cell {
     width: 100px;
@@ -317,7 +368,7 @@ h1 {
 
 
 /* =========================
-   RESTART BUTTON
+   RESTART
 ========================= */
 
 #restart-btn,
@@ -349,7 +400,7 @@ h1 {
 
 
 /* =========================
-   WINNER POPUP
+   POPUP
 ========================= */
 
 .popup-overlay {
@@ -410,10 +461,6 @@ h1 {
 }
 
 
-/* =========================
-   TROPHY
-========================= */
-
 .trophy {
     font-size: 65px;
 
@@ -446,10 +493,6 @@ h1 {
     }
 }
 
-
-/* =========================
-   POPUP TEXT
-========================= */
 
 .winner-popup h2 {
     font-size: 32px;
@@ -517,4 +560,49 @@ h1 {
 
         opacity: 0;
     }
+}
+
+
+/* =========================
+   SMALL SCREENS
+========================= */
+
+@media (max-width: 700px) {
+
+    .scoreboard {
+        position: fixed;
+
+        left: 10px;
+
+        top: 10px;
+
+        transform: none;
+
+        width: 140px;
+
+        padding: 12px;
+    }
+
+    .scoreboard h2 {
+        font-size: 20px;
+
+        margin-bottom: 10px;
+    }
+
+    .score-item {
+        padding: 6px 3px;
+    }
+
+    .score-item span {
+        font-size: 13px;
+    }
+
+    .score-item strong {
+        font-size: 17px;
+    }
+
+    .game-container {
+        margin-top: 120px;
+    }
+
 }
