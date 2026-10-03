@@ -86,7 +86,13 @@ const difficultySection =
     );
 
 
-/* SCORE ELEMENTS */
+/* SCOREBOARD */
+
+const scoreboard =
+    document.getElementById(
+        "scoreboard"
+    );
+
 
 const winsText =
     document.getElementById(
@@ -123,20 +129,16 @@ let board = [
 ];
 
 
-let currentPlayer =
-    "X";
+let currentPlayer = "X";
 
 
-let gameActive =
-    true;
+let gameActive = true;
 
 
-let gameMode =
-    "one-player";
+let gameMode = "one-player";
 
 
-let difficulty =
-    "easy";
+let difficulty = "easy";
 
 
 /* =========================
@@ -250,8 +252,7 @@ function handleCellClick(event) {
         gameMode === "one-player"
     ) {
 
-        currentPlayer =
-            "O";
+        currentPlayer = "O";
 
 
         statusText.textContent =
@@ -409,13 +410,6 @@ function getComputerMove() {
     if (
         difficulty === "hard"
     ) {
-
-        /*
-        Hard is still the strongest
-        difficulty, but it has a
-        7% chance of making a
-        random move.
-        */
 
         if (
             Math.random() < 0.07
@@ -727,11 +721,12 @@ function checkResult() {
         winningCombination
     ) {
 
-        gameActive =
-            false;
+        gameActive = false;
 
 
-        /* ONE PLAYER */
+        /* =====================
+           ONE PLAYER
+        ===================== */
 
         if (
             gameMode === "one-player"
@@ -740,8 +735,6 @@ function checkResult() {
             if (
                 currentPlayer === "X"
             ) {
-
-                /* PLAYER WON */
 
                 wins++;
 
@@ -764,8 +757,6 @@ function checkResult() {
 
             } else {
 
-                /* COMPUTER WON */
-
                 losses++;
 
                 updateScore();
@@ -787,32 +778,11 @@ function checkResult() {
         }
 
 
-        /* TWO PLAYERS */
+        /* =====================
+           TWO PLAYER
+        ===================== */
 
         else {
-
-            /*
-            In 2-player mode:
-            X is considered the player
-            whose score is displayed.
-            */
-
-            if (
-                currentPlayer === "X"
-            ) {
-
-                wins++;
-
-                updateScore();
-
-            } else {
-
-                losses++;
-
-                updateScore();
-
-            }
-
 
             statusText.textContent =
                 `Player ${currentPlayer} wins! 🎉`;
@@ -852,14 +822,21 @@ function checkResult() {
         !board.includes("")
     ) {
 
-        gameActive =
-            false;
+        gameActive = false;
 
 
-        draws++;
+        /* ONLY COUNT DRAWS IN
+           ONE PLAYER MODE */
 
+        if (
+            gameMode === "one-player"
+        ) {
 
-        updateScore();
+            draws++;
+
+            updateScore();
+
+        }
 
 
         statusText.textContent =
@@ -890,7 +867,7 @@ function checkResult() {
 
 
 /* =========================
-   UPDATE SCOREBOARD
+   UPDATE SCORE
 ========================= */
 
 function updateScore() {
@@ -1021,7 +998,7 @@ function drawWinningLine(
 
 
 /* =========================
-   WINNER POPUP
+   POPUP
 ========================= */
 
 function showWinnerPopup() {
@@ -1079,15 +1056,10 @@ function createConfetti() {
         const colors = [
 
             "#ff3b30",
-
             "#ffcc00",
-
             "#34c759",
-
             "#007aff",
-
             "#af52de",
-
             "#ff9500"
 
         ];
@@ -1145,17 +1117,17 @@ function changeGameMode(
     document.body.classList.remove(
 
         "one-player",
-
         "two-player-theme",
-
         "easy-theme",
-
         "medium-theme",
-
         "hard-theme"
 
     );
 
+
+    /* =========================
+       ONE PLAYER
+    ========================= */
 
     if (
         newMode === "one-player"
@@ -1171,9 +1143,19 @@ function changeGameMode(
         );
 
 
+        /* SHOW SCOREBOARD */
+
+        scoreboard.style.display =
+            "block";
+
+
+        /* SHOW DIFFICULTY */
+
         difficultySection.style.display =
             "block";
 
+
+        /* ACTIVE BUTTON */
 
         onePlayerButton.classList.add(
             "active"
@@ -1191,6 +1173,10 @@ function changeGameMode(
     }
 
 
+    /* =========================
+       TWO PLAYERS
+    ========================= */
+
     else {
 
         document.body.classList.add(
@@ -1198,9 +1184,19 @@ function changeGameMode(
         );
 
 
+        /* HIDE SCOREBOARD */
+
+        scoreboard.style.display =
+            "none";
+
+
+        /* HIDE DIFFICULTY */
+
         difficultySection.style.display =
             "none";
 
+
+        /* ACTIVE BUTTON */
 
         twoPlayerButton.classList.add(
             "active"
@@ -1247,9 +1243,7 @@ function changeDifficulty(
     document.body.classList.remove(
 
         "easy-theme",
-
         "medium-theme",
-
         "hard-theme"
 
     );
@@ -1314,7 +1308,7 @@ function changeDifficulty(
 
 
 /* =========================
-   MODE EVENTS
+   MODE BUTTON EVENTS
 ========================= */
 
 onePlayerButton.addEventListener(
