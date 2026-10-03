@@ -10,20 +10,55 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body class="easy-theme">
 
     <!-- Confetti -->
     <div id="confetti-container"></div>
 
 
-    <!-- Main Game -->
-
     <main class="game-container">
 
         <h1>Tic-Tac-Toe</h1>
 
-        <p id="status">Your turn (X)</p>
+        <p class="difficulty-label">
+            Choose Difficulty
+        </p>
 
+
+        <!-- Difficulty Buttons -->
+
+        <div class="difficulty-buttons">
+
+            <button
+                id="easy-btn"
+                class="difficulty-btn easy-btn active"
+            >
+                Easy
+            </button>
+
+            <button
+                id="medium-btn"
+                class="difficulty-btn medium-btn"
+            >
+                Medium
+            </button>
+
+            <button
+                id="hard-btn"
+                class="difficulty-btn hard-btn"
+            >
+                Hard
+            </button>
+
+        </div>
+
+
+        <p id="status">
+            Your turn (X)
+        </p>
+
+
+        <!-- Game Board -->
 
         <div class="board" id="board">
 
@@ -59,7 +94,9 @@
 
         <div class="winner-popup">
 
-            <div class="trophy">🏆</div>
+            <div class="trophy">
+                🏆
+            </div>
 
             <h2 id="winner-title">
                 You Win!
